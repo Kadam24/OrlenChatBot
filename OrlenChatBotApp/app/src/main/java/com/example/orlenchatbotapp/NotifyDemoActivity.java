@@ -60,12 +60,6 @@ public class NotifyDemoActivity extends AppCompatActivity {
                 "NotifyDemo News",
                 "Example News Channel");
 
-        /*BroadcastReceiver br = new MyBroadcastReceiver();
-
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-        this.registerReceiver(br, filter);*/
-
         try {
             socket = IO.socket("https://7806b38b.ngrok.io");
             socket.connect();
