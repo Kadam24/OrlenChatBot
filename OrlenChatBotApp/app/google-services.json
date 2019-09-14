@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "505108363718",
+    "firebase_url": "https://test123-d6109.firebaseio.com",
+    "project_id": "test123-d6109",
+    "storage_bucket": "test123-d6109.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505108363718:android:1233ad66384ab670f4dac7",
+        "android_client_info": {
+          "package_name": "com.example.orlenchatbotapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505108363718-280pbrprdj3vr04nd17tot8upssrniue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe3T-YA4BLfFKgOO-GlibawqTN16EHmgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505108363718-280pbrprdj3vr04nd17tot8upssrniue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
