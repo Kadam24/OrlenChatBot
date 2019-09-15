@@ -4,6 +4,11 @@ public class Message {
 
     private String nickname;
     private String message ;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
 
     public  Message(){
 
@@ -27,5 +32,9 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

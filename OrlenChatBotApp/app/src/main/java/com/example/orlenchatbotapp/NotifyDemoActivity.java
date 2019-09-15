@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.legacy.content.WakefulBroadcastReceiver;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +34,7 @@ import io.socket.emitter.Emitter;
 
 public class NotifyDemoActivity extends AppCompatActivity {
 
-    private Socket socket;
+    /*private Socket socket;
 
     NotificationManager notificationManager;
 
@@ -67,15 +68,28 @@ public class NotifyDemoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        socket.on("chat message", new Emitter.Listener() {
+        socket.on("live-agent-request", new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String data = (String) args[0];
-                            //String message = data.getString("chat message");
-                        sendNotification(data);
+                        JSONObject data = (JSONObject) args[0];
+                        try {
+                            String sessionId = data.getString("sessionId");
+                            sendNotification(sessionId);
+
+                            JSONArray arr = data.getJSONArray("messages");
+                            for(int i = 0; i < arr.length(); i++){
+                                System.out.println("Message type: " + arr.getJSONObject(i).getString("messageType"));
+                                System.out.println("Message: " + arr.getJSONObject(i).getString("message"));
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //String message = data.getString("chat message");
+
                     }
                 });
             }
@@ -133,5 +147,5 @@ public class NotifyDemoActivity extends AppCompatActivity {
             startWakefulService(context, (intent.setComponent(comp)));
             setResultCode(Activity.RESULT_OK);
         }
-    }
+    }*/
 }

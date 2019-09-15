@@ -1,5 +1,8 @@
 package com.example.orlenchatbotapp.ui.chat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,35 +18,37 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.orlenchatbotapp.R;
-import com.example.orlenchatbotapp.adapters.ChatBoxAdapter;
-import com.example.orlenchatbotapp.adapters.MessageListAdapter;
+import com.example.orlenchatbotapp.adapters.MyAdapter;
 import com.example.orlenchatbotapp.model.Message;
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class ChatFragment extends Fragment {
 
     public RecyclerView myRecylerView;
     public List<Message> MessageList;
-    public ChatBoxAdapter chatBoxAdapter;
+    public MyAdapter myAdapter;
     public EditText messagetxt;
     public Button send;
     private Socket socket;
 
+    NotificationManager notificationManager;
+
     //declare socket objectprivate Socket socket;
 
     public String nickname;
-
-    private RecyclerView mMessageRecycler;
-    private MessageListAdapter mMessageAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,57 +57,33 @@ public class ChatFragment extends Fragment {
         nickname = "HR employee";
         MessageList = new ArrayList<>();
 
-        Message m = new Message(nickname, "aaa");
-        MessageList.add(m);
-        Message n = new Message("Kasia", "aaa");
-        MessageList.add(n);
-        Message o = new Message(nickname, "aaa");
-        MessageList.add(o);
-        Message p = new Message("Kasia", "aaa");
-        MessageList.add(p);
+        notificationManager =
+                (NotificationManager)
+                        getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
         // --- brzydkie ale działa ---
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        final View root = inflater.inflate(R.layout.fragment_home, container, false);
         messagetxt = root.findViewById(R.id.message);
         send = root.findViewById(R.id.send);
 
         //setting up recyler
         myRecylerView = root.findViewById(R.id.messagelist);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
         myRecylerView.setLayoutManager(mLayoutManager);
         myRecylerView.setItemAnimator(new DefaultItemAnimator());
 
         // add the new updated list to the dapter
-        chatBoxAdapter = new ChatBoxAdapter(MessageList);
+        myAdapter = new MyAdapter(MessageList);
 
         // notify the adapter to update the recycler view
-        chatBoxAdapter.notifyDataSetChanged();
+        myAdapter.notifyDataSetChanged();
 
         //set the adapter for the recycler view
-        myRecylerView.setAdapter(chatBoxAdapter);
+        myRecylerView.setAdapter(myAdapter);
 
-        // -------- ładne ale nie działa -------
-
-/*        View root = inflater.inflate(R.layout.fragment_chat_new, container, false);
-        send = root.findViewById(R.id.button_chatbox_send);
-
-        //setting up recyler
-        mMessageRecycler = root.findViewById(R.id.reyclerview_message_list);
-        mMessageRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        mMessageRecycler.setItemAnimator(new DefaultItemAnimator());
-
-        // add the new updated list to the dapter
-        mMessageAdapter = new MessageListAdapter(getActivity().getApplicationContext(), MessageList);
-
-        // notify the adapter to update the recycler view
-        mMessageAdapter.notifyDataSetChanged();
-
-        //set the adapter for the recycler view
-        mMessageRecycler.setAdapter(mMessageAdapter);
-        */
-//------------------- niewazne ---------------------------------------
+        //------------------- niewazne ---------------------------------------
         try {
-            socket = IO.socket("http://yourlocalIPaddress:3000");
+            socket = IO.socket("https://7806b38b.ngrok.io");
             socket.connect();
             socket.emit("join", nickname);
         } catch (URISyntaxException e) {
@@ -110,13 +91,113 @@ public class ChatFragment extends Fragment {
 
         }
 
+        final String[] sessionId = new String[1];
+
+        socket.on("live-agent-request", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        try {
+                            sessionId[0] = data.getString("sessionId");
+
+                            JSONArray arr = data.getJSONArray("messages");
+                            for(int i = 0; i < arr.length(); i++){
+                                String messageType = arr.getJSONObject(i).getString("messageType");
+                                System.out.println("Message type: " + messageType);
+                                String message = arr.getJSONObject(i).getString("message");
+                                System.out.println("Message: " + message);
+
+                                if(messageType.equals("request")){
+                                    messageType = "Rajesh";
+                                }
+                                else
+                                    messageType = nickname;
+                                Calendar cal = Calendar.getInstance();
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                                Message m = new Message(messageType, message);
+                                m.setDate(sdf.format(cal.getTime()));
+                                MessageList.add(m);
+
+                                if(i == arr.length() - 1){
+                                    sendNotification(message);
+                                }
+
+                            }
+
+
+                            socket.on(sessionId[0], new Emitter.Listener() {
+                                @Override
+                                public void call(final Object... args) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            String data = (String) args[0];
+                                            System.out.println("Message: " + data);
+
+                                            Message m = new Message("Rajesh", data);
+                                            Calendar cal = Calendar.getInstance();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                                            m.setDate(sdf.format(cal.getTime()));
+                                            // add the new updated list to the dapter
+                                            MessageList.add(m);
+                                            myAdapter = new MyAdapter(MessageList);
+
+                                            // notify the adapter to update the recycler view
+                                            myAdapter.notifyDataSetChanged();
+
+                                            //set the adapter for the recycler view
+                                            myRecylerView.setAdapter(myAdapter);
+                                        }
+                                    });
+                                }
+                            });
+//                            messagetxt = root.findViewById(R.id.message);
+   //                         send = root.findViewById(R.id.send);
+
+                            // add the new updated list to the dapter
+                            myAdapter = new MyAdapter(MessageList);
+
+                            // notify the adapter to update the recycler view
+                            myAdapter.notifyDataSetChanged();
+
+                            //set the adapter for the recycler view
+                            myRecylerView.setAdapter(myAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //String message = data.getString("chat message");
+
+                    }
+                });
+            }
+        });
+
 
         // message send action
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //retrieve the nickname and the message content and fire the event messagedetectionif(!messagetxt.getText().toString().isEmpty()){
-                socket.emit("messagedetection", nickname, messagetxt.getText().toString());
+                String message = messagetxt.getText().toString();
+                Message m = new Message(nickname, message);
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                m.setDate(sdf.format(cal.getTime()));
+                MessageList.add(m);
+                socket.emit(sessionId[0], message , nickname);
+
+                // add the new updated list to the dapter
+                myAdapter = new MyAdapter(MessageList);
+
+                // notify the adapter to update the recycler view
+                myAdapter.notifyDataSetChanged();
+
+                //set the adapter for the recycler view
+                myRecylerView.setAdapter(myAdapter);
 
                 messagetxt.setText(" ");
             }
@@ -167,22 +248,24 @@ public class ChatFragment extends Fragment {
                             // make instance of message
 
                             Message m = new Message(nickname, message);
-
+                            Calendar cal = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            m.setDate(sdf.format(cal.getTime()));
 
                             //add the message to the messageList
 
                             MessageList.add(m);
 
                             // add the new updated list to the dapter
-                            chatBoxAdapter = new ChatBoxAdapter(MessageList);
+                            myAdapter = new MyAdapter(MessageList);
 
                             // notify the adapter to update the recycler view
 
-                            chatBoxAdapter.notifyDataSetChanged();
+                            myAdapter.notifyDataSetChanged();
 
                             //set the adapter for the recycler view
 
-                            myRecylerView.setAdapter(chatBoxAdapter);
+                            myRecylerView.setAdapter(myAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -192,6 +275,24 @@ public class ChatFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    protected void sendNotification(String message) {
+
+        int notificationID = 101;
+
+        String channelID = "com.example.orlenchatbotapp.news";
+
+        Notification notification =
+                new Notification.Builder(ChatFragment.this.getActivity(),
+                        channelID)
+                        .setContentTitle("New Message")
+                        .setContentText(message)
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setChannelId(channelID)
+                        .build();
+
+        notificationManager.notify(notificationID, notification);
     }
 
     @Override

@@ -12,7 +12,7 @@
         android:id="@+id/image_message_profile"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:background="#ffffff"
+        android:background="@drawable/photo"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -31,7 +31,7 @@
     <TextView
         android:id="@+id/text_message_body"
         android:text="hi man, how are you?"
-        android:background="#ececec"
+        android:background="@drawable/rounded_rectangle_grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="240dp"

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".NotifyDemoActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,17 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver
-            android:name=".NotifyDemoActivity$GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.google.android.gcm.demo.app" />
-            </intent-filter>
-        </receiver>
-        <service android:name=".NotifyDemoActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" ></uses-permission>
