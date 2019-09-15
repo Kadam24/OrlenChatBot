@@ -15,8 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.orlenchatbotapp.R;
-import com.example.orlenchatbotapp.adapters.ChatBoxAdapter;
-import com.example.orlenchatbotapp.adapters.MessageListAdapter;
+import com.example.orlenchatbotapp.adapters.MyAdapter;
 import com.example.orlenchatbotapp.model.Message;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -33,7 +32,7 @@ public class ChatFragment extends Fragment {
 
     public RecyclerView myRecylerView;
     public List<Message> MessageList;
-    public ChatBoxAdapter chatBoxAdapter;
+    public MyAdapter myAdapter;
     public EditText messagetxt;
     public Button send;
     private Socket socket;
@@ -41,9 +40,6 @@ public class ChatFragment extends Fragment {
     //declare socket objectprivate Socket socket;
 
     public String nickname;
-
-    private RecyclerView mMessageRecycler;
-    private MessageListAdapter mMessageAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,33 +69,14 @@ public class ChatFragment extends Fragment {
         myRecylerView.setItemAnimator(new DefaultItemAnimator());
 
         // add the new updated list to the dapter
-        chatBoxAdapter = new ChatBoxAdapter(MessageList);
+        myAdapter = new MyAdapter(MessageList);
 
         // notify the adapter to update the recycler view
-        chatBoxAdapter.notifyDataSetChanged();
+        myAdapter.notifyDataSetChanged();
 
         //set the adapter for the recycler view
-        myRecylerView.setAdapter(chatBoxAdapter);
+        myRecylerView.setAdapter(myAdapter);
 
-        // -------- ładne ale nie działa -------
-
-/*        View root = inflater.inflate(R.layout.fragment_chat_new, container, false);
-        send = root.findViewById(R.id.button_chatbox_send);
-
-        //setting up recyler
-        mMessageRecycler = root.findViewById(R.id.reyclerview_message_list);
-        mMessageRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        mMessageRecycler.setItemAnimator(new DefaultItemAnimator());
-
-        // add the new updated list to the dapter
-        mMessageAdapter = new MessageListAdapter(getActivity().getApplicationContext(), MessageList);
-
-        // notify the adapter to update the recycler view
-        mMessageAdapter.notifyDataSetChanged();
-
-        //set the adapter for the recycler view
-        mMessageRecycler.setAdapter(mMessageAdapter);
-        */
 //------------------- niewazne ---------------------------------------
         try {
             socket = IO.socket("http://yourlocalIPaddress:3000");
@@ -109,7 +86,6 @@ public class ChatFragment extends Fragment {
             e.printStackTrace();
 
         }
-
 
         // message send action
         send.setOnClickListener(new View.OnClickListener() {
@@ -174,15 +150,15 @@ public class ChatFragment extends Fragment {
                             MessageList.add(m);
 
                             // add the new updated list to the dapter
-                            chatBoxAdapter = new ChatBoxAdapter(MessageList);
+                            myAdapter = new MyAdapter(MessageList);
 
                             // notify the adapter to update the recycler view
 
-                            chatBoxAdapter.notifyDataSetChanged();
+                            myAdapter.notifyDataSetChanged();
 
                             //set the adapter for the recycler view
 
-                            myRecylerView.setAdapter(chatBoxAdapter);
+                            myRecylerView.setAdapter(myAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

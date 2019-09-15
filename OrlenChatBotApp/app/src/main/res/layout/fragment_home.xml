@@ -34,16 +34,25 @@
         <EditText
             android:id="@id/message"
             android:layout_weight="3"
-            android:layout_width="wrap_content"
-            android:hint="your message"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:hint="Enter message"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="6"/>
 
         <Button
             android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
             android:text="send"
+            android:textSize="14dp"
             />
         </LinearLayout>
     </LinearLayout>

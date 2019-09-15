@@ -33,7 +33,14 @@ public class ChatBoxAdapter  extends RecyclerView.Adapter<ChatBoxAdapter.MyViewH
 
     @Override
     public int getItemCount() {
+        System.out.println(1);
         return MessageList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        System.out.println(2);
+        return super.getItemViewType(position);
     }
 
     @Override
