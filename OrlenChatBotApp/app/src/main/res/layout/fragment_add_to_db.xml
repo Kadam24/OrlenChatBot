@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="Zadane pytanie:"
+        android:textColor="#FF6E00"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:maxLines="6"
+
+        android:textSize="18dp"
+        android:hint="Tu za chwilę pojawi się pytanie..."
+        android:layout_margin="25dp"
+        android:textColor="@android:color/darker_gray"
+        android:background="@null"/>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FF6E00"
+        android:textStyle="bold"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
+        android:text="Proponowana odpowiedź:"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:id="@+id/answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="6"
+        android:padding="15dp"
+        android:textSize="18dp"
+        android:hint="Proponowana odpowiedź"
+        android:textColor="@android:color/darker_gray"
+        android:layout_margin="25dp"
+        android:background="@null"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="25dp"
+            android:text="nie zapisuj"
+            android:background="@drawable/rounded_rectangle_grey"/>
+
+        <Button
+            android:id="@+id/add_q"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/rounded_rectangle_orange"
+            android:text="zapisz" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

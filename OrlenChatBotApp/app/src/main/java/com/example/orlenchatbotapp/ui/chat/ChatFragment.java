@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.orlenchatbotapp.AddQuestionFragment;
 import com.example.orlenchatbotapp.R;
 import com.example.orlenchatbotapp.adapters.MyAdapter;
 import com.example.orlenchatbotapp.model.Message;
@@ -43,6 +44,7 @@ public class ChatFragment extends Fragment {
     public EditText messagetxt;
     public Button send;
     private Socket socket;
+    private Button finisih;
 
     NotificationManager notificationManager;
 
@@ -65,6 +67,22 @@ public class ChatFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
         messagetxt = root.findViewById(R.id.message);
         send = root.findViewById(R.id.send);
+        finisih = root.findViewById(R.id.finish);
+
+        finisih.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putSerializable("q", "question");
+                args.putSerializable("a", "answer");
+                Fragment toFragment = new AddQuestionFragment();
+                toFragment.setArguments(args);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, toFragment, "tag")
+                        .addToBackStack("tag").commit();
+            }
+        });
 
         //setting up recyler
         myRecylerView = root.findViewById(R.id.messagelist);
