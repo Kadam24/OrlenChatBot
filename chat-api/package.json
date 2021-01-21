@@ -18,7 +18,7 @@
     "dialogflow-fulfillment": "^0.6.1",
     "express": "^4.17.1",
     "mongodb": "^3.3.2",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "typescript": "^3.6.3",
     "uuid": "^3.3.3"
   },
